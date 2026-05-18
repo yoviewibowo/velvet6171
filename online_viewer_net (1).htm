@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+<title>VOTARA — Employee Appreciation Voting System</title>
+
+<style>
+
+/* =========================
+   CATPPUCCIN MOCHA
+========================= */
+
+:root{
+  --base:#1e1e2e;
+  --mantle:#181825;
+  --surface0:#313244;
+  --surface1:#45475a;
+  --surface2:#585b70;
+
+  --text:#cdd6f4;
+  --subtext:#bac2de;
+
+  --mauve:#cba6f7;
+  --blue:#89b4fa;
+  --green:#a6e3a1;
+  --red:#f38ba8;
+  --peach:#fab387;
+  --lavender:#b4befe;
+}
+
+*{
+  box-sizing:border-box;
+  font-family:'Segoe UI',sans-serif;
+}
+
+body{
+  margin:0;
+  padding:40px;
+  background:linear-gradient(
+    135deg,
+    var(--mantle),
+    var(--base)
+  );
+  color:var(--text);
+}
+
+.container{
+  max-width:900px;
+  margin:auto;
+  background:rgba(49,50,68,0.96);
+  border:1px solid var(--surface1);
+  border-radius:28px;
+  padding:35px;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.35);
+}
+
+.header{
+  text-align:center;
+  margin-bottom:35px;
+}
+
+.header h1{
+  margin:0;
+  color:var(--mauve);
+  font-size:2.4rem;
+}
+
+.header p{
+  color:var(--subtext);
+  margin-top:10px;
+}
+
+.period-card{
+  background:rgba(69,71,90,0.35);
+  border:1px solid var(--surface1);
+  border-radius:18px;
+  padding:18px;
+  margin-bottom:25px;
+}
+
+.period-card h3{
+  margin:0;
+  color:var(--peach);
+}
+
+label{
+  display:block;
+  margin-bottom:10px;
+  color:var(--lavender);
+  font-weight:600;
+}
+
+select,
+input{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid var(--surface1);
+  background:var(--surface0);
+  color:var(--text);
+  font-size:1rem;
+  transition:0.2s;
+}
+
+select:focus,
+input:focus{
+  outline:none;
+  border-color:var(--mauve);
+  box-shadow:
+    0 0 0 4px rgba(203,166,247,0.15);
+}
+
+.card{
+  background:rgba(69,71,90,0.35);
+  border:1px solid var(--surface1);
+  border-radius:22px;
+  padding:24px;
+  margin-bottom:22px;
+}
+
+.card h3{
+  margin-top:0;
+  color:var(--peach);
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 180px;
+  gap:18px;
+}
+
+button{
+  width:100%;
+  padding:16px;
+  border:none;
+  border-radius:18px;
+  background:linear-gradient(
+    135deg,
+    var(--mauve),
+    var(--blue)
+  );
+  color:white;
+  font-size:1rem;
+  font-weight:700;
+  cursor:pointer;
+  transition:0.25s;
+}
+
+button:hover{
+  transform:translateY(-2px);
+  opacity:0.95;
+}
+
+.message{
+  margin-top:18px;
+  text-align:center;
+  font-weight:bold;
+  font-size:1rem;
+}
+
+.success{
+  color:var(--green);
+}
+
+.error{
+  color:var(--red);
+}
+
+.dashboard{
+  margin-top:40px;
+}
+
+.dashboard-title{
+  color:var(--blue);
+  margin-bottom:20px;
+}
+
+.result-item{
+  background:var(--surface0);
+  padding:15px;
+  border-radius:14px;
+  margin-bottom:12px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.result-item strong{
+  color:var(--text);
+}
+
+.badge{
+  background:rgba(203,166,247,0.2);
+  color:var(--mauve);
+  padding:8px 14px;
+  border-radius:999px;
+  font-weight:bold;
+}
+
+.hidden-result{
+  text-align:center;
+  color:var(--subtext);
+}
+
+.footer{
+  margin-top:30px;
+  text-align:center;
+  color:var(--subtext);
+  font-size:0.9rem;
+}
+
+@media(max-width:700px){
+
+  body{
+    padding:20px;
+  }
+
+  .row{
+    grid-template-columns:1fr;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- HEADER -->
+
+  <div class="header">
+
+    <h1>🏆 VOTARA</h1>
+
+    <p>
+      Employee Appreciation Voting System
+    </p>
+
+  </div>
+
+  <!-- PERIODE -->
+
+  <div class="period-card">
+
+    <h3 id="periodeText">
+      Loading periode...
+    </h3>
+
+  </div>
+
+  <!-- FORM -->
+
+  <label>Nama Pegawai</label>
+
+  <select id="voter">
+
+    <option value="">
+      Loading...
+    </option>
+
+  </select>
+
+  <br><br>
+
+  <label>NIP Lama</label>
+
+  <input
+    type="password"
+    id="nip"
+    placeholder="Masukkan NIP Lama"
+  >
+
+  <br><br>
+
+  <form id="voteForm">
+
+    <div id="cards"></div>
+
+    <button type="submit">
+      Submit Voting
+    </button>
+
+    <div
+      class="message"
+      id="message">
+    </div>
+
+  </form>
+
+  <!-- DASHBOARD -->
+
+  <div
+    class="dashboard"
+    id="dashboard">
+  </div>
+
+  <div class="footer">
+    Internal Employee Voting System
+  </div>
+
+</div>
+
+<script>
+
+/* =========================
+   CONFIG
+========================= */
+
+const SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbyttVxhKHrQkrvqZbAamNo5VzZa_GZp3vL4bcHE_MHXkkwF2GyIAwvtdqDBTssJV0ygEw/exec";
+
+/* =========================
+   ELEMENT
+========================= */
+
+const cardsContainer =
+  document.getElementById('cards');
+
+const message =
+  document.getElementById('message');
+
+const dashboard =
+  document.getElementById('dashboard');
+
+let kandidatList = [];
+
+/* =========================
+   LOAD MASTER DATA
+========================= */
+
+async function loadMaster(){
+
+  try{
+
+    const response =
+      await fetch(SCRIPT_URL);
+
+    const data =
+      await response.json();
+
+    kandidatList = data.kandidat;
+
+    /* =========================
+       LOAD PERIODE
+    ========================= */
+
+    document
+      .getElementById('periodeText')
+      .innerHTML =
+      `📅 Periode Voting:
+      <strong>${data.periode}</strong>`;
+
+    /* =========================
+       VOTING CLOSED
+    ========================= */
+
+    if(
+      String(data.votingOpen)
+      .trim()
+      .toUpperCase() !== "OPEN"
+    ){
+
+      document
+        .getElementById('voteForm')
+        .innerHTML = `
+
+          <div class="card">
+
+            <h3>
+              🔒 Voting Ditutup
+            </h3>
+
+            <p>
+              Periode voting saat ini telah ditutup.
+            </p>
+
+          </div>
+
+        `;
+
+    }
+
+    /* =========================
+       LOAD VOTER
+    ========================= */
+
+    const voterSelect =
+      document.getElementById('voter');
+
+    voterSelect.innerHTML =
+      `<option value="">
+        Pilih Nama Pegawai
+      </option>`;
+
+    data.pegawai.forEach(p=>{
+
+      voterSelect.innerHTML += `
+
+        <option value="${p[0]}">
+          ${p[0]}
+        </option>
+
+      `;
+
+    });
+
+    /* =========================
+       CREATE RANK CARD
+    ========================= */
+
+    for(let i=1;i<=3;i++){
+
+      let options =
+        `<option value="">
+          Pilih Kandidat
+        </option>`;
+
+      kandidatList.forEach(k=>{
+
+        options += `
+
+          <option value="${k}">
+            ${k}
+          </option>
+
+        `;
+
+      });
+
+      cardsContainer.innerHTML += `
+
+        <div class="card">
+
+          <h3>
+            Ranking ${i}
+          </h3>
+
+          <div class="row">
+
+            <div>
+
+              <label>
+                Kandidat
+              </label>
+
+              <select
+                class="pegawai-select"
+                required>
+
+                ${options}
+
+              </select>
+
+            </div>
+
+            <div>
+
+              <label>
+                Nilai
+              </label>
+
+              <input
+                type="number"
+                min="0"
+                max="100"
+                placeholder="0-100"
+                required>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+
+    renderDashboard(data);
+
+  }catch(err){
+
+    console.log(err);
+
+    message.innerHTML =
+      "Gagal memuat data";
+
+    message.classList.add('error');
+
+  }
+
+}
+
+loadMaster();
+
+/* =========================
+   AUTO DISABLE KANDIDAT
+========================= */
+
+function updateDropdowns(){
+
+  const selects =
+    document.querySelectorAll('.pegawai-select');
+
+  const selectedValues =
+    [...selects]
+    .map(s => s.value)
+    .filter(v => v !== '');
+
+  selects.forEach(currentSelect => {
+
+    const currentValue =
+      currentSelect.value;
+
+    [...currentSelect.options]
+    .forEach(option => {
+
+      if(option.value === '')
+        return;
+
+      option.disabled = (
+
+        selectedValues.includes(option.value)
+        &&
+        option.value !== currentValue
+
+      );
+
+    });
+
+  });
+
+}
+
+document.addEventListener(
+  'change',
+  function(e){
+
+    if(
+      e.target.classList.contains(
+        'pegawai-select'
+      )
+    ){
+
+      updateDropdowns();
+
+    }
+
+  }
+);
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function renderDashboard(data){
+
+  if(
+    String(data.showResult)
+    .trim()
+    .toUpperCase() !== "SHOW"
+  ){
+
+    dashboard.innerHTML = `
+
+      <div class="card hidden-result">
+
+        <h2>
+          🔒 Hasil Voting Disembunyikan
+        </h2>
+
+        <p>
+          Hasil akan dibuka setelah
+          periode voting selesai.
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+
+  }
+
+  let html = `
+
+    <h2 class="dashboard-title">
+      📊 Hasil Sementara
+    </h2>
+
+  `;
+
+  const sorted =
+    Object.entries(data.ranking)
+    .sort((a,b)=>b[1]-a[1]);
+
+  sorted.forEach((item,index)=>{
+
+    html += `
+
+      <div class="result-item">
+
+        <strong>
+          ${index+1}. ${item[0]}
+        </strong>
+
+        <div class="badge">
+          ${item[1]} poin
+        </div>
+
+      </div>
+
+    `;
+
+  });
+
+  dashboard.innerHTML = html;
+
+}
+
+/* =========================
+   SUBMIT FORM
+========================= */
+
+document
+.getElementById('voteForm')
+.addEventListener(
+'submit',
+async function(e){
+
+  e.preventDefault();
+
+  message.innerHTML = "";
+  message.className = "message";
+
+  const voter =
+    document.getElementById('voter').value;
+
+  const nip =
+    document.getElementById('nip').value;
+
+  if(!voter || !nip){
+
+    message.innerHTML =
+      "Nama dan NIP Lama wajib diisi";
+
+    message.classList.add('error');
+
+    return;
+
+  }
+
+  const cards =
+    document.querySelectorAll('.card');
+
+  const votes = [];
+
+  const selected = [];
+
+  for(let i=0;i<cards.length;i++){
+
+    const pegawai =
+      cards[i]
+      .querySelector('select')
+      .value;
+
+    const nilai =
+      cards[i]
+      .querySelector('input')
+      .value;
+
+    if(!pegawai || !nilai){
+
+      message.innerHTML =
+        "Semua kandidat dan nilai wajib diisi";
+
+      message.classList.add('error');
+
+      return;
+
+    }
+
+    /* =========================
+       DUPLIKAT KANDIDAT
+    ========================= */
+
+    if(selected.includes(pegawai)){
+
+      alert(
+        'Kandidat tidak boleh dipilih lebih dari sekali 😏'
+      );
+
+      return;
+
+    }
+
+    selected.push(pegawai);
+
+    votes.push({
+
+      ranking:i+1,
+      pegawai:pegawai,
+      nilai:nilai
+
+    });
+
+  }
+
+  try{
+
+    const response =
+      await fetch(SCRIPT_URL,{
+
+      method:"POST",
+
+      body:JSON.stringify({
+
+        voter:voter,
+        nip:nip,
+        votes:votes
+
+      })
+
+    });
+
+    const result =
+      await response.json();
+
+    /* =========================
+       SUDAH VOTING
+    ========================= */
+
+    if(result.status === "duplicate"){
+
+      alert(
+        'Anda sudah melakukan voting pada periode ini 😌'
+      );
+
+      return;
+
+    }
+
+    if(result.status === "success"){
+
+      message.innerHTML =
+        "Voting berhasil dikirim ✨";
+
+      message.classList.add('success');
+
+      document
+        .getElementById('voteForm')
+        .reset();
+
+    }else{
+
+      message.innerHTML =
+        result.message;
+
+      message.classList.add('error');
+
+    }
+
+  }catch(err){
+
+    console.log(err);
+
+    message.innerHTML =
+      "Terjadi kesalahan server";
+
+    message.classList.add('error');
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
