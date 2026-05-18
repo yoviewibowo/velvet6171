@@ -347,7 +347,7 @@ button:hover{
   <div class="footer">
 
     <div>
-      Internal Employee Appreciation System
+      Internal Employee Appreciation System of Statistics-BPS Pontianak Municipality
     </div>
 
     <div>
@@ -361,7 +361,7 @@ button:hover{
 
 </div>
 
-<script> 
+<script>
 
 /* =========================
    CONFIG
@@ -412,6 +412,30 @@ async function loadMaster(){
       <strong>${data.periode}</strong>`;
 
     /* =========================
+       LOAD VOTER
+    ========================= */
+
+    const voterSelect =
+      document.getElementById('voter');
+
+    voterSelect.innerHTML =
+      `<option value="">
+        Pilih Nama Pegawai
+      </option>`;
+
+    data.pegawai.forEach(p=>{
+
+      voterSelect.innerHTML += `
+
+        <option value="${p[0]}">
+          ${p[0]}
+        </option>
+
+      `;
+
+    });
+
+    /* =========================
        VOTING CLOSED
     ========================= */
 
@@ -439,35 +463,17 @@ async function loadMaster(){
 
         `;
 
+      renderDashboard(data);
+
+      return;
+
     }
-
-    /* =========================
-       LOAD VOTER
-    ========================= */
-
-    const voterSelect =
-      document.getElementById('voter');
-
-    voterSelect.innerHTML =
-      `<option value="">
-        Pilih Nama Pegawai
-      </option>`;
-
-    data.pegawai.forEach(p=>{
-
-      voterSelect.innerHTML += `
-
-        <option value="${p[0]}">
-          ${p[0]}
-        </option>
-
-      `;
-
-    });
 
     /* =========================
        CREATE RANK CARD
     ========================= */
+
+    cardsContainer.innerHTML = "";
 
     for(let i=1;i<=3;i++){
 
@@ -561,7 +567,9 @@ loadMaster();
 function updateDropdowns(){
 
   const selects =
-    document.querySelectorAll('.pegawai-select');
+    document.querySelectorAll(
+      '.pegawai-select'
+    );
 
   const selectedValues =
     [...selects]
@@ -711,8 +719,14 @@ async function(e){
 
   }
 
+  /* =========================
+     FIX CARD SELECTOR
+  ========================= */
+
   const cards =
-    document.querySelectorAll('.card');
+    document.querySelectorAll(
+      '#cards .card'
+    );
 
   const votes = [];
 
@@ -720,15 +734,21 @@ async function(e){
 
   for(let i=0;i<cards.length;i++){
 
+    const selectElement =
+      cards[i].querySelector('select');
+
+    const inputElement =
+      cards[i].querySelector('input');
+
+    if(!selectElement || !inputElement){
+      continue;
+    }
+
     const pegawai =
-      cards[i]
-      .querySelector('select')
-      .value;
+      selectElement.value;
 
     const nilai =
-      cards[i]
-      .querySelector('input')
-      .value;
+      inputElement.value;
 
     if(!pegawai || !nilai){
 
@@ -803,6 +823,8 @@ async function(e){
       document
         .getElementById('voteForm')
         .reset();
+
+      updateDropdowns();
 
     }else{
 
