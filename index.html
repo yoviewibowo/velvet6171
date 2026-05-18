@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-<title>VOTARA — Employee Appreciation Voting System</title>
+<title>VELVET — Valuable Employee Voting & Evaluation Tool</title>
 
 <style>
 
@@ -38,23 +38,25 @@
 body{
   margin:0;
   padding:40px;
-  background:linear-gradient(
-    135deg,
-    var(--mantle),
-    var(--base)
-  );
+  background:
+    linear-gradient(
+      135deg,
+      var(--mantle),
+      var(--base)
+    );
   color:var(--text);
 }
 
 .container{
-  max-width:900px;
+  max-width:920px;
   margin:auto;
   background:rgba(49,50,68,0.96);
   border:1px solid var(--surface1);
-  border-radius:28px;
-  padding:35px;
+  border-radius:30px;
+  padding:38px;
   box-shadow:
-    0 10px 30px rgba(0,0,0,0.35);
+    0 10px 35px rgba(0,0,0,0.35);
+  backdrop-filter:blur(12px);
 }
 
 .header{
@@ -62,15 +64,29 @@ body{
   margin-bottom:35px;
 }
 
+.logo{
+  font-size:3rem;
+  margin-bottom:10px;
+}
+
 .header h1{
   margin:0;
+  font-size:2.8rem;
   color:var(--mauve);
-  font-size:2.4rem;
+  letter-spacing:1px;
 }
 
 .header p{
-  color:var(--subtext);
   margin-top:10px;
+  color:var(--subtext);
+  font-size:1rem;
+}
+
+.tagline{
+  margin-top:15px;
+  color:var(--lavender);
+  font-size:0.95rem;
+  opacity:0.9;
 }
 
 .period-card{
@@ -78,7 +94,7 @@ body{
   border:1px solid var(--surface1);
   border-radius:18px;
   padding:18px;
-  margin-bottom:25px;
+  margin-bottom:28px;
 }
 
 .period-card h3{
@@ -119,6 +135,11 @@ input:focus{
   border-radius:22px;
   padding:24px;
   margin-bottom:22px;
+  transition:0.25s;
+}
+
+.card:hover{
+  transform:translateY(-2px);
 }
 
 .card h3{
@@ -137,11 +158,12 @@ button{
   padding:16px;
   border:none;
   border-radius:18px;
-  background:linear-gradient(
-    135deg,
-    var(--mauve),
-    var(--blue)
-  );
+  background:
+    linear-gradient(
+      135deg,
+      var(--mauve),
+      var(--blue)
+    );
   color:white;
   font-size:1rem;
   font-weight:700;
@@ -151,7 +173,7 @@ button{
 
 button:hover{
   transform:translateY(-2px);
-  opacity:0.95;
+  opacity:0.96;
 }
 
 .message{
@@ -170,7 +192,7 @@ button:hover{
 }
 
 .dashboard{
-  margin-top:40px;
+  margin-top:45px;
 }
 
 .dashboard-title{
@@ -180,9 +202,9 @@ button:hover{
 
 .result-item{
   background:var(--surface0);
-  padding:15px;
-  border-radius:14px;
-  margin-bottom:12px;
+  padding:16px;
+  border-radius:15px;
+  margin-bottom:14px;
   display:flex;
   justify-content:space-between;
   align-items:center;
@@ -195,7 +217,7 @@ button:hover{
 .badge{
   background:rgba(203,166,247,0.2);
   color:var(--mauve);
-  padding:8px 14px;
+  padding:8px 15px;
   border-radius:999px;
   font-weight:bold;
 }
@@ -206,10 +228,15 @@ button:hover{
 }
 
 .footer{
-  margin-top:30px;
+  margin-top:40px;
   text-align:center;
   color:var(--subtext);
-  font-size:0.9rem;
+  font-size:0.92rem;
+  line-height:1.8;
+}
+
+.footer strong{
+  color:var(--mauve);
 }
 
 @media(max-width:700px){
@@ -218,8 +245,16 @@ button:hover{
     padding:20px;
   }
 
+  .container{
+    padding:25px;
+  }
+
   .row{
     grid-template-columns:1fr;
+  }
+
+  .header h1{
+    font-size:2.2rem;
   }
 
 }
@@ -235,11 +270,19 @@ button:hover{
 
   <div class="header">
 
-    <h1>🏆 VOTARA</h1>
+    <div class="logo">
+      🏆
+    </div>
+
+    <h1>VELVET</h1>
 
     <p>
-      Employee Appreciation Voting System
+      Valuable Employee Voting & Evaluation Tool
     </p>
+
+    <div class="tagline">
+      Recognize Excellence. Celebrate People.
+    </div>
 
   </div>
 
@@ -299,13 +342,26 @@ button:hover{
     id="dashboard">
   </div>
 
+  <!-- FOOTER -->
+
   <div class="footer">
-    Internal Employee Voting System
+
+    <div>
+      Internal Employee Appreciation System
+    </div>
+
+    <div>
+      <strong>
+        VELVET
+      </strong>
+      by yovie.wibowo ft. syafaatun
+    </div>
+
   </div>
 
 </div>
 
-<script>
+<script> 
 
 /* =========================
    CONFIG
@@ -685,10 +741,6 @@ async function(e){
 
     }
 
-    /* =========================
-       DUPLIKAT KANDIDAT
-    ========================= */
-
     if(selected.includes(pegawai)){
 
       alert(
@@ -730,10 +782,6 @@ async function(e){
 
     const result =
       await response.json();
-
-    /* =========================
-       SUDAH VOTING
-    ========================= */
 
     if(result.status === "duplicate"){
 
